@@ -4,7 +4,7 @@ NAME="$1"
 TAG="$2"
 
 # Place the app inside the container
-ID=$(cat | docker run -i -a stdin progrium/buildstep /bin/bash -c "mkdir -p /app && tar -xC /app")
+ID=$(cat | docker run -e CURL_TIMEOUT=500 -i -a stdin progrium/buildstep /bin/bash -c "mkdir -p /app && tar -xC /app")
 test $(docker wait $ID) -eq 0
 docker commit $ID $NAME $TAG > /dev/null
 
@@ -14,7 +14,7 @@ if [[ -z "$TAG" ]]; then
 else
   IMAGE=$NAME:$TAG
 fi
-ID=$(docker run -d $IMAGE /build/builder)
+ID=$(docker run -e CURL_TIMEOUT=500 -d $IMAGE /build/builder)
 docker attach $ID
 test $(docker wait $ID) -eq 0
 docker commit $ID $NAME $TAG > /dev/null
