@@ -59,10 +59,10 @@ ruby -e "require 'yaml';(YAML.load_file('$build_root/.release')['config_vars'] |
 cat > /exec <<EOF
 #!/bin/bash
 export HOME=/app
-for file in $app_root/.profile.d/*; do source \$file; done
+for file in /app/.profile.d/*; do source \$file; done
 hash -r
-cd $app_root
-"\$@"
+cd /app
+git pull && bundle install && bundle exec "\$@"
 EOF
 chmod +x /exec
 
@@ -79,6 +79,17 @@ else
 fi
 EOF
 chmod +x /start
+
+cat > /analyze <<EOF
+#!/bin/bash
+export HOME=/app
+for file in /app/.profile.d/*; do source \$file; done
+hash -r
+cd /strano_tools && git pull origin master
+cd /app
+git pull && bundle install && bundle exec "\$@"
+EOF
+chmod +x /analyze
 
 rm -fR /app
 mv /build/app /

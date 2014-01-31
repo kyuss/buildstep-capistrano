@@ -1,1 +1,1 @@
-https://github.com/kyuss/heroku-buildpack-ruby
+https://github.com/kyuss/heroku-buildpack-capistrano
